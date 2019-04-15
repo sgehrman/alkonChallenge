@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import App from './App'
-import * as serviceWorker from './serviceWorker'
+import * as serviceWorker from './js/serviceWorker'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 

@@ -1,39 +1,13 @@
-import dotenv from 'dotenv'
 import React, { Component } from 'react'
 import SignButton from './components/SignButton'
 import UserInfo from './components/UserInfo'
 import UserLoginView from './components/UserLoginView'
 import WalletButton from './components/WalletButton'
-import { OreId } from 'eos-auth'
-import scatterProvider from 'eos-transit-scatter-provider'
-import ledgerProvider from 'eos-transit-ledger-provider'
-import lynxProvider from 'eos-transit-lynx-provider'
-import meetoneProvider from 'eos-transit-meetone-provider'
-import tokenpocketProvider from 'eos-transit-tokenpocket-provider'
 import axios from 'axios'
 import Button from '@material-ui/core/Button'
-
-dotenv.config()
+import ORE from './js/ore'
 
 let chainNetworkForExample = 'eos_kylin'
-
-const {
-  REACT_APP_OREID_APP_ID: appId, // Provided when you register your app
-  REACT_APP_OREID_API_KEY: apiKey, // Provided when you register your app
-  REACT_APP_AUTH_CALLBACK: authCallbackUrl, // The url called by the server when login flow is finished - must match one of the callback strings listed in the App Registration
-  REACT_APP_SIGN_CALLBACK: signCallbackUrl, // The url called by the server when transaction signing flow is finished - must match one of the callback strings listed in the App Registration
-  REACT_APP_OREID_URL: oreIdUrl, // HTTPS Address of OREID server
-  REACT_APP_BACKGROUND_COLOR: backgroundColor, // Background color shown during login flow
-} = process.env
-
-let eosTransitWalletProviders = [
-  scatterProvider(),
-  // ledgerProvider(),
-  ledgerProvider({ pathIndexList: [0, 1, 2, 35] }),
-  lynxProvider(),
-  meetoneProvider(),
-  tokenpocketProvider(),
-]
 
 class App extends Component {
   constructor(props) {
@@ -42,6 +16,8 @@ class App extends Component {
       isLoggedIn: false,
       userInfo: {},
     }
+
+    this.ore = new ORE()
 
     this.server = 'https://kylin.eoscanada.com/'
 
@@ -53,24 +29,6 @@ class App extends Component {
     this.handleGetInfo = this.handleGetInfo.bind(this)
   }
 
-  //called by library to set local busy state
-  setBusyCallback = isBusy => {
-    this.setState({ isBusy })
-  }
-
-  //intialize oreId
-  oreId = new OreId({
-    appName: 'ORE ID Sample App',
-    appId,
-    apiKey,
-    oreIdUrl,
-    authCallbackUrl,
-    signCallbackUrl,
-    backgroundColor,
-    eosTransitWalletProviders,
-    setBusyCallback: this.setBusyCallback,
-  })
-
   async componentWillMount() {
     this.loadUserFromLocalState()
     this.handleAuthCallback()
@@ -78,7 +36,7 @@ class App extends Component {
   }
 
   async loadUserFromLocalState() {
-    const userInfo = (await this.oreId.getUser()) || {}
+    const userInfo = (await this.ore.id.getUser()) || {}
 
     if ((userInfo || {}).accountName) {
       this.setState({ userInfo, isLoggedIn: true })
@@ -87,7 +45,7 @@ class App extends Component {
 
   async loadUserFromApi(account) {
     try {
-      const userInfo = (await this.oreId.getUserInfoFromApi(account)) || {}
+      const userInfo = (await this.ore.id.getUserInfoFromApi(account)) || {}
       this.setState({ userInfo, isLoggedIn: true })
     } catch (error) {
       this.setState({ errorMessage: error.message })
@@ -105,7 +63,7 @@ class App extends Component {
   handleLogout() {
     this.clearErrors()
     this.setState({ userInfo: {}, isLoggedIn: false })
-    this.oreId.logout() //clears local user state (stored in local storage or cookie)
+    this.ore.id.logout() //clears local user state (stored in local storage or cookie)
   }
 
   async handleSignButton(permissionIndex) {
@@ -132,13 +90,13 @@ class App extends Component {
     try {
       this.clearErrors()
       let { provider } = this.walletButtons[permissionIndex] || {}
-      if (this.oreId.canDiscover(provider)) {
-        await this.oreId.discover(provider, chainNetwork)
+      if (this.ore.id.canDiscover(provider)) {
+        await this.ore.id.discover(provider, chainNetwork)
       } else {
         console.log(
           `Provider doesn't support discover, so we'll call login instead`
         )
-        await this.oreId.login({ provider, chainNetwork })
+        await this.ore.id.login({ provider, chainNetwork })
       }
       this.loadUserFromApi(this.state.userInfo.accountName) //reload user from ore id api - to show new keys discovered
     } catch (error) {
@@ -150,7 +108,7 @@ class App extends Component {
     let chainNetwork = chainNetworkForExample
     try {
       this.clearErrors()
-      let loginResponse = await this.oreId.login({ provider, chainNetwork })
+      let loginResponse = await this.ore.id.login({ provider, chainNetwork })
       //if the login responds with a loginUrl, then redirect the browser to it to start the user's OAuth login flow
       let { isLoggedIn, account, loginUrl } = loginResponse
       if (loginUrl) {
@@ -186,7 +144,7 @@ class App extends Component {
         transaction,
         accountIsTransactionPermission: false,
       }
-      let signResponse = await this.oreId.sign(signOptions)
+      let signResponse = await this.ore.id.sign(signOptions)
       //if the sign responds with a signUrl, then redirect the browser to it to call the signing flow
       let { signUrl, signedTransaction } = signResponse || {}
       if (signUrl) {
@@ -227,7 +185,7 @@ class App extends Component {
   async handleAuthCallback() {
     const url = window.location.href
     if (/authcallback/i.test(url)) {
-      const { account, errors, state } = await this.oreId.handleAuthResponse(
+      const { account, errors, state } = await this.ore.id.handleAuthResponse(
         url
       )
       if (!errors) {
@@ -246,7 +204,7 @@ class App extends Component {
         signedTransaction,
         state,
         errors,
-      } = await this.oreId.handleSignResponse(url)
+      } = await this.ore.id.handleSignResponse(url)
       if (!errors && signedTransaction) {
         this.setState({
           signedTransaction: JSON.stringify(signedTransaction),
@@ -261,12 +219,14 @@ class App extends Component {
   render() {
     let {
       errorMessage,
-      isBusy,
       isLoggedIn,
       signedTransaction,
       signState,
       userInfo,
     } = this.state
+
+    const isBusy = this.ore.isBusy()
+
     return (
       <div>
         <div>
