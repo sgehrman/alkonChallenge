@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import SignButton from './components/SignButton'
 import UserInfo from './components/UserInfo'
+import HeaderBar from './components/HeaderBar'
 import UserLoginView from './components/UserLoginView'
 import WalletButton from './components/WalletButton'
 import axios from 'axios'
@@ -229,6 +230,7 @@ class App extends Component {
 
     return (
       <div>
+        <HeaderBar />
         <div>
           <UserLoginView
             isLoggedin={isLoggedIn}
