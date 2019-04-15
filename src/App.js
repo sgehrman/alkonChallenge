@@ -7,6 +7,7 @@ import WalletButton from './components/WalletButton'
 import axios from 'axios'
 import Button from '@material-ui/core/Button'
 import ORE from './js/ore'
+import EOSRpc from './js/eosRpc'
 
 let chainNetworkForExample = 'eos_kylin'
 
@@ -19,8 +20,7 @@ class App extends Component {
     }
 
     this.ore = new ORE()
-
-    this.server = 'https://kylin.eoscanada.com/'
+    this.eosRpc = new EOSRpc('https://kylin.eoscanada.com')
 
     this.handleLogin = this.handleLogin.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
@@ -403,38 +403,11 @@ class App extends Component {
   }
 
   handleGetInfo() {
-    axios
-      .get(this.server + 'v1/chain/get_info')
-      .then(function(response) {
-        console.log(response)
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
+    this.eosRpc.getInfo()
   }
 
   handleContractTable() {
-    const data = {
-      code: 'createbridge',
-      table: 'balances',
-      scope: 'createbridge',
-      json: true,
-    }
-    const headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      accept: 'application/json',
-    }
-
-    axios
-      .post(this.server + 'v1/chain/get_table_rows', data, {
-        headers: headers,
-      })
-      .then(function(response) {
-        console.log(response)
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
+    this.eosRpc.getRows('createbridge', 'createbridge', 'balances')
   }
 }
 
