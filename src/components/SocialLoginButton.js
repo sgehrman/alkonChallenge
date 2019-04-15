@@ -44,11 +44,8 @@ class SocialLoginButton extends Component {
       buttonStyle: {
         ...defaultButtonStyle,
         ...providerStyle.buttonStyle,
-        ...this.props.buttonStyle,
       },
-      logoStyle: {
-        ...defaultLogoStyle,
-      },
+      logoStyle: defaultLogoStyle,
       text: this.props.text || providerStyle.text,
     }
   }
@@ -64,7 +61,6 @@ class SocialLoginButton extends Component {
   }
 
   render() {
-    //TODO: Check that provider is one of the valid types
     let { provider, onClickCallback, buttonStyle, logoStyle, text } = this.state
     return (
       <div>
