@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react'
 import Roboto from './resources/Roboto-Medium.ttf'
 
-let validProviders=[
+let validProviders = [
   'oreid',
   'scatter',
   'facebook',
@@ -16,7 +16,7 @@ let validProviders=[
   'ledger',
   'lynx',
   'meetone',
-  'tokenpocket'
+  'tokenpocket',
 ]
 
 var defaultButtonStyle = {
@@ -38,40 +38,63 @@ const defaultLogoStyle = {
   width: '24px',
   marginLeft: '10px',
   marginRight: '10px',
-  verticalAlign: 'bottom'
+  verticalAlign: 'bottom',
 }
 
 class SocialLoginButton extends Component {
   constructor(props) {
     super(props)
-    this.checkValidProvider(this.props.provider);
-    let providerStyle=require(`./resources/${this.props.provider}-style.json`) || {}; //get the style for this provider
+    this.checkValidProvider(this.props.provider)
+    let providerStyle =
+      require(`./resources/${this.props.provider}-style.json`) || {} //get the style for this provider
     this.state = {
       provider: this.props.provider,
       onClickCallback: this.props.onClick,
-      buttonStyle: {...defaultButtonStyle, ...providerStyle.buttonStyle ,...this.props.buttonStyle},
-      logoStyle: {...defaultLogoStyle, ...providerStyle.logoStyle, ...this.props.logoStyle},
-      text: (this.props.text || providerStyle.text)
-    };
-  }
-
-  checkValidProvider(provider) {
-    if(!validProviders.includes(provider)) {
-      throw Error(`${provider} is not one of the supported providers. Use one of the following: ${validProviders.join(', ')}`);
+      buttonStyle: {
+        ...defaultButtonStyle,
+        ...providerStyle.buttonStyle,
+        ...this.props.buttonStyle,
+      },
+      logoStyle: {
+        ...defaultLogoStyle,
+        ...providerStyle.logoStyle,
+        ...this.props.logoStyle,
+      },
+      text: this.props.text || providerStyle.text,
     }
   }
 
-  render () {
+  checkValidProvider(provider) {
+    if (!validProviders.includes(provider)) {
+      throw Error(
+        `${provider} is not one of the supported providers. Use one of the following: ${validProviders.join(
+          ', '
+        )}`
+      )
+    }
+  }
+
+  render() {
     //TODO: Check that provider is one of the valid types
-    let { provider, onClickCallback, buttonStyle, logoStyle, text} = this.state;
+    let { provider, onClickCallback, buttonStyle, logoStyle, text } = this.state
     return (
       <div>
-        <button style={buttonStyle} onClick={() => {onClickCallback(provider)}}> 
-          <img style={logoStyle} src={require(`./resources/${provider}-logo.png`)} alt={text}/>{text}
+        <button
+          style={buttonStyle}
+          onClick={() => {
+            onClickCallback(provider)
+          }}
+        >
+          <img
+            style={logoStyle}
+            src={require(`./resources/${provider}-logo.png`)}
+            alt={text}
+          />
+          {text}
         </button>
       </div>
-    );
+    )
   }
 }
 
-export default SocialLoginButton;
+export default SocialLoginButton
