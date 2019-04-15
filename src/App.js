@@ -7,6 +7,9 @@ import ledgerProvider from 'eos-transit-ledger-provider'
 import lynxProvider from 'eos-transit-lynx-provider'
 import meetoneProvider from 'eos-transit-meetone-provider'
 import tokenpocketProvider from 'eos-transit-tokenpocket-provider'
+import axios from 'axios'
+import Button from '@material-ui/core/Button'
+
 dotenv.config()
 
 let chainNetworkForExample = 'eos_kylin'
@@ -36,9 +39,15 @@ class App extends Component {
       isLoggedIn: false,
       userInfo: {},
     }
+
+    this.server = 'https://kylin.eoscanada.com/'
+
     this.handleLogin = this.handleLogin.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
     this.handleSignButton = this.handleSignButton.bind(this)
+    this.handleGetAccount = this.handleGetAccount.bind(this)
+    this.handleContractTable = this.handleContractTable.bind(this)
+    this.handleGetInfo = this.handleGetInfo.bind(this)
   }
 
   //called by library to set local busy state
@@ -67,6 +76,7 @@ class App extends Component {
 
   async loadUserFromLocalState() {
     const userInfo = (await this.oreId.getUser()) || {}
+
     if ((userInfo || {}).accountName) {
       this.setState({ userInfo, isLoggedIn: true })
     }
@@ -259,6 +269,7 @@ class App extends Component {
           {!isLoggedIn && this.renderLoginButtons()}
           {isLoggedIn && this.renderUserInfo()}
           {isLoggedIn && this.renderSigningOptions()}
+          {isLoggedIn && this.renderAccountInfoButton()}
         </div>
         <h3 style={{ color: 'green', margin: '50px' }}>
           {isBusy && 'working...'}
@@ -293,17 +304,13 @@ class App extends Component {
         <br />
         email: {email}
         <br />
-        <button
+        <Button
           onClick={this.handleLogout}
-          style={{
-            marginTop: 20,
-            padding: '10px',
-            backgroundColor: '#FFFBE6',
-            borderRadius: '5px',
-          }}
+          color="secondary"
+          variant="contained"
         >
           Logout
-        </button>
+        </Button>
       </div>
     )
   }
@@ -346,7 +353,7 @@ class App extends Component {
     permissions.map((permission, index) => {
       let provider = permission.externalWalletType || 'oreid'
       return (
-        <div style={{ alignContent: 'center' }}>
+        <div style={{ alignContent: 'center' }} key={index}>
           <LoginButton
             provider={provider}
             data-tag={index}
@@ -373,7 +380,7 @@ class App extends Component {
     walletButtons.map((wallet, index) => {
       let provider = wallet.provider
       return (
-        <div style={{ alignContent: 'center' }}>
+        <div style={{ alignContent: 'center' }} key={index}>
           <LoginButton
             provider={provider}
             data-tag={index}
@@ -460,6 +467,93 @@ class App extends Component {
         />
       </div>
     )
+  }
+
+  renderAccountInfoButton() {
+    return (
+      <div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.handleGetInfo}
+        >
+          Get info
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.handleGetAccount}
+        >
+          Account Info
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.handleContractTable}
+        >
+          Contract Table
+        </Button>
+      </div>
+    )
+  }
+
+  handleGetAccount() {
+    const { accountName } = this.state.userInfo
+    const data = {
+      Name: accountName,
+    }
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      accept: 'application/json',
+    }
+
+    axios
+      .post(
+        'https://ore-staging.openrights.exchange/v1/chain/get_account',
+        data,
+        { headers: headers }
+      )
+      .then(function(response) {
+        console.log(response)
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+  }
+
+  handleGetInfo() {
+    axios
+      .get(this.server + 'v1/chain/get_info')
+      .then(function(response) {
+        console.log(response)
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+  }
+
+  handleContractTable() {
+    const data = {
+      code: 'createbridge',
+      table: 'balances',
+      scope: 'createbridge',
+      json: true,
+    }
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      accept: 'application/json',
+    }
+
+    axios
+      .post(this.server + 'v1/chain/get_table_rows', data, {
+        headers: headers,
+      })
+      .then(function(response) {
+        console.log(response)
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
   }
 }
 
