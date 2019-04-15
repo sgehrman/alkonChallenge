@@ -1,0 +1,10 @@
+{
+    "buttonStyle":{
+        "backgroundColor": "#7ECEF9"
+    },
+    "logoStyle":{
+        "width":30,
+        "height":30
+    },
+    "text":"Log in with Scatter"
+}

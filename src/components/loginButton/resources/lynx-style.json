@@ -1,0 +1,10 @@
+{
+    "buttonStyle":{
+        "backgroundColor": "#C95A75"
+    },
+    "logoStyle":{
+        "width":30,
+        "height":30
+    },
+    "text":"Sign with Lynx"
+}
