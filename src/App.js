@@ -2,8 +2,8 @@ import dotenv from 'dotenv'
 import React, { Component } from 'react'
 import SignButton from './components/SignButton'
 import UserInfo from './components/UserInfo'
+import UserLoginView from './components/UserLoginView'
 import WalletButton from './components/WalletButton'
-import SocialLoginButton from './components/SocialLoginButton'
 import { OreId } from 'eos-auth'
 import scatterProvider from 'eos-transit-scatter-provider'
 import ledgerProvider from 'eos-transit-ledger-provider'
@@ -270,7 +270,10 @@ class App extends Component {
     return (
       <div>
         <div>
-          {!isLoggedIn && this.renderLoginButtons()}
+          <UserLoginView
+            isLoggedin={isLoggedIn}
+            clickedLogin={this.handleLogin}
+          />
 
           <UserInfo
             isLoggedin={isLoggedIn}
@@ -384,58 +387,6 @@ class App extends Component {
         </div>
       )
     })
-
-  renderLoginButtons() {
-    return (
-      <div>
-        <SocialLoginButton
-          provider="facebook"
-          onClick={() => this.handleLogin('facebook')}
-          //  text='Log in with Facebook'
-        />
-        <SocialLoginButton
-          provider="twitter"
-          onClick={() => this.handleLogin('twitter')}
-          //  text='Log in with Twitter'
-        />
-        <SocialLoginButton
-          provider="github"
-          onClick={() => this.handleLogin('github')}
-          //  text='Log in with Github'
-        />
-        <SocialLoginButton
-          provider="twitch"
-          onClick={() => this.handleLogin('twitch')}
-          //  text='Log in with Twitch'
-        />
-        <SocialLoginButton
-          provider="line"
-          onClick={() => this.handleLogin('line')}
-          //  text='Log in with Line'
-        />
-        <SocialLoginButton
-          provider="kakao"
-          onClick={() => this.handleLogin('kakao')}
-          //  text='Log in with Kakao'
-        />
-        <SocialLoginButton
-          provider="linkedin"
-          onClick={() => this.handleLogin('linkedin')}
-          //  text='Log in with LinkedIn'
-        />
-        <SocialLoginButton
-          provider="google"
-          onClick={() => this.handleLogin('google')}
-          //  text='Log in with Google'
-        />
-        <SocialLoginButton
-          provider="scatter"
-          onClick={() => this.handleLogin('scatter')}
-          //  text='Log in with Scatter'
-        />
-      </div>
-    )
-  }
 
   renderAccountInfoButton() {
     return (

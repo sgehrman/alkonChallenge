@@ -16,7 +16,7 @@ class UserInfo extends Component {
     const { accountName, email, name, picture, username } = this.props.userInfo
 
     return (
-      <div style={{ marginTop: 50, marginLeft: 40 }}>
+      <div style={{ padding: '10px' }}>
         <h3>User Info</h3>
         <img src={picture} style={{ width: 50, height: 50 }} alt={'user'} />
         <br />
