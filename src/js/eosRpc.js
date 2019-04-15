@@ -13,18 +13,22 @@ export default class EOSRpc {
       table: table,
     })
 
-    console.log(resp)
+    return resp
   }
 
   async getInfo() {
     const resp = await this.rpc.get_info()
 
     console.log(resp)
+
+    return resp
   }
 
   async getAccount(accountName) {
     const resp = await this.rpc.get_account(accountName)
 
     console.log(resp)
+
+    return resp
   }
 }

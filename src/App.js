@@ -7,6 +7,7 @@ import WalletButton from './components/WalletButton'
 import Button from '@material-ui/core/Button'
 import ORE from './js/ore'
 import EOSRpc from './js/eosRpc'
+import AppBalances from './components/AppBalances'
 
 let chainNetworkForExample = 'eos_kylin'
 
@@ -37,18 +38,24 @@ class App extends Component {
     this.handleSignCallback()
   }
 
+  setUserLoggedIn(userInfo) {
+    this.setState({ userInfo, isLoggedIn: true })
+
+    this.fetchBalances()
+  }
+
   async loadUserFromLocalState() {
     const userInfo = (await this.ore.id.getUser()) || {}
 
     if ((userInfo || {}).accountName) {
-      this.setState({ userInfo, isLoggedIn: true })
+      this.setUserLoggedIn(userInfo)
     }
   }
 
   async loadUserFromApi(account) {
     try {
       const userInfo = (await this.ore.id.getUserInfoFromApi(account)) || {}
-      this.setState({ userInfo, isLoggedIn: true })
+      this.setUserLoggedIn(userInfo)
     } catch (error) {
       this.setState({ errorMessage: error.message })
     }
@@ -225,6 +232,7 @@ class App extends Component {
       signedTransaction,
       signState,
       userInfo,
+      balances,
     } = this.state
 
     const isBusy = this.ore.isBusy()
@@ -243,6 +251,8 @@ class App extends Component {
             userInfo={userInfo}
             clickedLogout={this.handleLogout}
           />
+
+          {isLoggedIn && this.renderAppBalances(balances)}
 
           {isLoggedIn && this.renderSigningOptions()}
           {isLoggedIn && this.renderAccountInfoButton()}
@@ -263,6 +273,10 @@ class App extends Component {
         {isLoggedIn && this.renderDiscoverOptions()}
       </div>
     )
+  }
+
+  renderAppBalances(balances) {
+    return <AppBalances balances={balances} />
   }
 
   renderSigningOptions() {
@@ -391,6 +405,20 @@ class App extends Component {
 
   handleContractTable() {
     this.eosRpc.getRows('createbridge', 'createbridge', 'balances')
+  }
+
+  async fetchBalances() {
+    try {
+      const rows = await this.eosRpc.getRows(
+        'createbridge',
+        'createbridge',
+        'balances'
+      )
+
+      this.setState({ balances: rows })
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 
