@@ -1,6 +1,8 @@
 import dotenv from 'dotenv'
 import React, { Component } from 'react'
-import LoginButton from './components/loginButton'
+import SignButton from './components/SignButton'
+import UserInfo from './components/UserInfo'
+import WalletButton from './components/WalletButton'
 import SocialLoginButton from './components/SocialLoginButton'
 import { OreId } from 'eos-auth'
 import scatterProvider from 'eos-transit-scatter-provider'
@@ -263,12 +265,19 @@ class App extends Component {
       isLoggedIn,
       signedTransaction,
       signState,
+      userInfo,
     } = this.state
     return (
       <div>
         <div>
           {!isLoggedIn && this.renderLoginButtons()}
-          {isLoggedIn && this.renderUserInfo()}
+
+          <UserInfo
+            isLoggedin={isLoggedIn}
+            userInfo={userInfo}
+            clickedLogout={this.handleLogout}
+          />
+
           {isLoggedIn && this.renderSigningOptions()}
           {isLoggedIn && this.renderAccountInfoButton()}
         </div>
@@ -286,32 +295,6 @@ class App extends Component {
           {signState && `Returned state param: ${signState}`}
         </div>
         {isLoggedIn && this.renderDiscoverOptions()}
-      </div>
-    )
-  }
-
-  renderUserInfo() {
-    const { accountName, email, name, picture, username } = this.state.userInfo
-    return (
-      <div style={{ marginTop: 50, marginLeft: 40 }}>
-        <h3>User Info</h3>
-        <img src={picture} style={{ width: 50, height: 50 }} alt={'user'} />
-        <br />
-        accountName: {accountName}
-        <br />
-        name: {name}
-        <br />
-        username: {username}
-        <br />
-        email: {email}
-        <br />
-        <Button
-          onClick={this.handleLogout}
-          color="secondary"
-          variant="contained"
-        >
-          Logout
-        </Button>
       </div>
     )
   }
@@ -339,11 +322,19 @@ class App extends Component {
       { provider: 'meetone', chainNetwork },
       { provider: 'tokenpocket', chainNetwork },
     ]
+
+    const buttonGroupStyle = {
+      display: 'flex',
+      flexWrap: 'wrap',
+    }
+
     return (
       <div>
         <div style={{ marginTop: 50, marginLeft: 20 }}>
           <h3 style={{ marginTop: 50 }}>Or discover a key in your wallet</h3>
-          <ul>{this.renderWalletDiscoverButtons(this.walletButtons)}</ul>
+          <div style={buttonGroupStyle}>
+            {this.renderWalletDiscoverButtons(this.walletButtons)}
+          </div>
         </div>
       </div>
     )
@@ -355,7 +346,7 @@ class App extends Component {
       let provider = permission.externalWalletType || 'oreid'
       return (
         <div style={{ alignContent: 'center' }} key={index}>
-          <LoginButton
+          <SignButton
             provider={provider}
             data-tag={index}
             buttonStyle={{
@@ -368,7 +359,7 @@ class App extends Component {
             onClick={() => {
               this.handleSignButton(index)
             }}
-          >{`Sign Transaction with ${provider}`}</LoginButton>
+          >{`Sign Transaction with ${provider}`}</SignButton>
           {`Chain:${permission.chainNetwork} ---- Account:${
             permission.chainAccount
           } ---- Permission:${permission.permission}`}
@@ -381,21 +372,15 @@ class App extends Component {
     walletButtons.map((wallet, index) => {
       let provider = wallet.provider
       return (
-        <div style={{ alignContent: 'center' }} key={index}>
-          <LoginButton
+        <div key={index}>
+          <WalletButton
             provider={provider}
             data-tag={index}
-            buttonStyle={{
-              width: 80,
-              marginLeft: -20,
-              marginTop: 20,
-              marginBottom: 10,
-            }}
             text={`${provider}`}
             onClick={() => {
               this.handleWalletDiscoverButton(index)
             }}
-          >{`${provider}`}</LoginButton>
+          >{`${provider}`}</WalletButton>
         </div>
       )
     })

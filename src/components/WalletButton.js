@@ -20,19 +20,24 @@ let validProviders = [
 ]
 
 var defaultButtonStyle = {
+  padding: '10px 24px 10px 14px',
+  backgroundColor: '#3E5895',
+  margin: '6px',
   color: '#ffffff',
-  width: 250,
-  marginTop: '20px',
+}
+
+var contentStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
 }
 
 const defaultLogoStyle = {
   width: '24px',
-  marginLeft: '10px',
-  marginRight: '10px',
-  verticalAlign: 'bottom',
+  height: 'auto',
 }
 
-class SocialLoginButton extends Component {
+class WalletButton extends Component {
   constructor(props) {
     super(props)
     this.checkValidProvider(this.props.provider)
@@ -44,8 +49,12 @@ class SocialLoginButton extends Component {
       buttonStyle: {
         ...defaultButtonStyle,
         ...providerStyle.buttonStyle,
+        ...this.props.buttonStyle,
       },
-      logoStyle: defaultLogoStyle,
+      contentStyle: contentStyle,
+      logoStyle: {
+        ...defaultLogoStyle,
+      },
       text: this.props.text || providerStyle.text,
     }
   }
@@ -61,26 +70,28 @@ class SocialLoginButton extends Component {
   }
 
   render() {
+    //TODO: Check that provider is one of the valid types
     let { provider, onClickCallback, buttonStyle, logoStyle, text } = this.state
     return (
       <div>
         <Button
-          variant="contained"
           style={buttonStyle}
           onClick={() => {
             onClickCallback(provider)
           }}
         >
-          <img
-            style={logoStyle}
-            src={require(`../assets/button-styles/${provider}-logo.png`)}
-            alt={text}
-          />
-          {text}
+          <div style={contentStyle}>
+            <img
+              style={logoStyle}
+              src={require(`../assets/button-styles/${provider}-logo.png`)}
+              alt={text}
+            />
+            {text}
+          </div>
         </Button>
       </div>
     )
   }
 }
 
-export default SocialLoginButton
+export default WalletButton

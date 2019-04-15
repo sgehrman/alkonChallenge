@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Roboto from './resources/Roboto-Medium.ttf'
 
 let validProviders = [
   'oreid',
@@ -23,7 +22,6 @@ var defaultButtonStyle = {
   padding: '10px 24px 10px 14px',
   backgroundColor: '#3E5895',
   color: '#ffffff',
-  fontFamily: Roboto + 'sans-serif',
   fontWeight: '500',
   fontSize: '14px',
   lineHeight: '22px',
@@ -41,12 +39,12 @@ const defaultLogoStyle = {
   verticalAlign: 'bottom',
 }
 
-class SocialLoginButton extends Component {
+class SignButton extends Component {
   constructor(props) {
     super(props)
     this.checkValidProvider(this.props.provider)
     let providerStyle =
-      require(`./resources/${this.props.provider}-style.json`) || {} //get the style for this provider
+      require(`../assets/button-styles/${this.props.provider}-style.json`) || {} //get the style for this provider
     this.state = {
       provider: this.props.provider,
       onClickCallback: this.props.onClick,
@@ -87,7 +85,7 @@ class SocialLoginButton extends Component {
         >
           <img
             style={logoStyle}
-            src={require(`./resources/${provider}-logo.png`)}
+            src={require(`../assets/button-styles/${provider}-logo.png`)}
             alt={text}
           />
           {text}
@@ -97,4 +95,4 @@ class SocialLoginButton extends Component {
   }
 }
 
-export default SocialLoginButton
+export default SignButton
