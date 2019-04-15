@@ -4,7 +4,6 @@ import UserInfo from './components/UserInfo'
 import HeaderBar from './components/HeaderBar'
 import UserLoginView from './components/UserLoginView'
 import WalletButton from './components/WalletButton'
-import axios from 'axios'
 import Button from '@material-ui/core/Button'
 import ORE from './js/ore'
 import EOSRpc from './js/eosRpc'
@@ -20,6 +19,8 @@ class App extends Component {
     }
 
     this.ore = new ORE()
+
+    this.stagingRpc = new EOSRpc('https://ore-staging.openrights.exchange')
     this.eosRpc = new EOSRpc('https://kylin.eoscanada.com')
 
     this.handleLogin = this.handleLogin.bind(this)
@@ -380,26 +381,8 @@ class App extends Component {
 
   handleGetAccount() {
     const { accountName } = this.state.userInfo
-    const data = {
-      Name: accountName,
-    }
-    const headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      accept: 'application/json',
-    }
 
-    axios
-      .post(
-        'https://ore-staging.openrights.exchange/v1/chain/get_account',
-        data,
-        { headers: headers }
-      )
-      .then(function(response) {
-        console.log(response)
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
+    this.stagingRpc.getAccount(accountName)
   }
 
   handleGetInfo() {
