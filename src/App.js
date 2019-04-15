@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import React, { Component } from 'react'
 import LoginButton from './components/loginButton'
+import SocialLoginButton from './components/SocialLoginButton'
 import { OreId } from 'eos-auth'
 import scatterProvider from 'eos-transit-scatter-provider'
 import ledgerProvider from 'eos-transit-ledger-provider'
@@ -402,66 +403,48 @@ class App extends Component {
   renderLoginButtons() {
     return (
       <div>
-        <LoginButton
+        <SocialLoginButton
           provider="facebook"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('facebook')}
           //  text='Log in with Facebook'
         />
-        <LoginButton
+        <SocialLoginButton
           provider="twitter"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('twitter')}
           //  text='Log in with Twitter'
         />
-        <LoginButton
+        <SocialLoginButton
           provider="github"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('github')}
           //  text='Log in with Github'
         />
-        <LoginButton
+        <SocialLoginButton
           provider="twitch"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('twitch')}
           //  text='Log in with Twitch'
         />
-        <LoginButton
+        <SocialLoginButton
           provider="line"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('line')}
           //  text='Log in with Line'
         />
-        <LoginButton
+        <SocialLoginButton
           provider="kakao"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('kakao')}
           //  text='Log in with Kakao'
         />
-        <LoginButton
+        <SocialLoginButton
           provider="linkedin"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('linkedin')}
           //  text='Log in with LinkedIn'
         />
-        <LoginButton
+        <SocialLoginButton
           provider="google"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('google')}
           //  text='Log in with Google'
         />
-        <LoginButton
+        <SocialLoginButton
           provider="scatter"
-          buttonStyle={{ width: 250, marginTop: '24px' }}
-          logoStyle={{ marginLeft: 0 }}
           onClick={() => this.handleLogin('scatter')}
           //  text='Log in with Scatter'
         />
