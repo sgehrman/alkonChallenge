@@ -1,15 +1,56 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
+import Button from '@material-ui/core/Button'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import {
+  usePopupState,
+  bindTrigger,
+  bindMenu,
+} from 'material-ui-popup-state/hooks'
 
-class AppBalances extends Component {
-  render() {
-    const { balances } = this.props
-    console.log('rr', balances)
+export default function AppBalances(props) {
+  const [appName, setAppName] = useState(null)
 
-    if (balances) {
-      return (
+  const { balances } = props
+
+  const popupState = usePopupState({
+    variant: 'popover',
+    popupId: 'demoMenu',
+  })
+
+  function menuSelected(popupState, appName) {
+    setAppName(appName)
+    popupState.close()
+  }
+
+  if (balances) {
+    if (!appName) {
+      setAppName(balances.rows[0].origin)
+    }
+    return (
+      <div>
+        <h3>Application Balances</h3>
+
         <div>
-          <h3>Application Balances</h3>
-          {balances.rows.map((row, index) => {
+          <Button variant="contained" {...bindTrigger(popupState)}>
+            App: {appName}
+          </Button>
+          <Menu {...bindMenu(popupState)}>
+            {balances.rows.map((row, index) => {
+              return (
+                <MenuItem
+                  key={index}
+                  onClick={() => menuSelected(popupState, row.origin)}
+                >
+                  {row.origin}
+                </MenuItem>
+              )
+            })}
+          </Menu>
+        </div>
+
+        {balances.rows.map((row, index) => {
+          if (row.origin === appName) {
             return (
               <div key={index}>
                 <div>App: {row.origin}</div>
@@ -26,12 +67,10 @@ class AppBalances extends Component {
                 })}
               </div>
             )
-          })}
-        </div>
-      )
-    }
-    return null
+          }
+        })}
+      </div>
+    )
   }
+  return null
 }
-
-export default AppBalances
