@@ -271,7 +271,7 @@ class App extends Component {
   }
 
   renderAppBalances(balances) {
-    return <AppBalances balances={balances} />
+    return <AppBalances balances={balances} title="CreateBridge Contract" />
   }
 
   renderSigningOptions() {
