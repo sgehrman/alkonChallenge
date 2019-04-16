@@ -67,6 +67,8 @@ export default function AppBalances(props) {
                 })}
               </div>
             )
+          } else {
+            return null
           }
         })}
       </div>
