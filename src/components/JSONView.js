@@ -12,7 +12,14 @@ import {
 
 export default function JSONView(props) {
   const [json, setJSON] = useState(null)
-  const [mode, setMode] = useState('info')
+
+  let showButton = props.hideButton ? false : true
+
+  let startMode = props.mode
+  if (!startMode) {
+    startMode = 'info'
+  }
+  const [mode, setMode] = useState(startMode)
 
   const eosRpc = new EOSRpc('https://kylin.eoscanada.com')
   const stagingRpc = new EOSRpc('https://ore-staging.openrights.exchange')
@@ -88,23 +95,25 @@ export default function JSONView(props) {
 
   return (
     <div>
-      <div>
-        <Button variant="contained" {...bindTrigger(popupState)}>
-          {mode}
-        </Button>
-        <Menu {...bindMenu(popupState)}>
-          {menuItems.map((menu, index) => {
-            return (
-              <MenuItem
-                key={index}
-                onClick={() => menuSelected(popupState, menu.mode)}
-              >
-                {menu.mode}
-              </MenuItem>
-            )
-          })}
-        </Menu>
-      </div>
+      {showButton && (
+        <div>
+          <Button variant="contained" {...bindTrigger(popupState)}>
+            {mode}
+          </Button>
+          <Menu {...bindMenu(popupState)}>
+            {menuItems.map((menu, index) => {
+              return (
+                <MenuItem
+                  key={index}
+                  onClick={() => menuSelected(popupState, menu.mode)}
+                >
+                  {menu.mode}
+                </MenuItem>
+              )
+            })}
+          </Menu>
+        </div>
+      )}
 
       {jsonView}
     </div>

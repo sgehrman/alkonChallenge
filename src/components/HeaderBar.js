@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
+import { UserInfoDialog, showDialog } from './UserInfoDialog'
 
 const styles = {
   root: {
@@ -57,6 +58,11 @@ function HeaderBar(props) {
             className={classes.menuButton}
             color="inherit"
             aria-label="Menu"
+            onClick={() => {
+              if (isLoggedin) {
+                showDialog()
+              }
+            }}
           >
             <MenuIcon />
           </IconButton>
@@ -81,6 +87,8 @@ function HeaderBar(props) {
           )}
         </Toolbar>
       </AppBar>
+
+      <UserInfoDialog userInfo={userInfo} />
     </div>
   )
 }
