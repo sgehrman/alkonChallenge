@@ -19,15 +19,15 @@ export default class EOSRpc {
   async getInfo() {
     const resp = await this.rpc.get_info()
 
-    console.log(resp)
-
     return resp
   }
 
   async getAccount(accountName) {
-    const resp = await this.rpc.get_account(accountName)
+    let resp = {}
 
-    console.log(resp)
+    if (accountName && accountName.length > 0) {
+      resp = await this.rpc.get_account(accountName)
+    }
 
     return resp
   }

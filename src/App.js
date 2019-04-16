@@ -4,7 +4,7 @@ import UserInfo from './components/UserInfo'
 import HeaderBar from './components/HeaderBar'
 import UserLoginView from './components/UserLoginView'
 import WalletButton from './components/WalletButton'
-import Button from '@material-ui/core/Button'
+import JSONView from './components/JSONView'
 import ORE from './js/ore'
 import EOSRpc from './js/eosRpc'
 import AppBalances from './components/AppBalances'
@@ -27,9 +27,6 @@ class App extends Component {
     this.handleLogin = this.handleLogin.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
     this.handleSignButton = this.handleSignButton.bind(this)
-    this.handleGetAccount = this.handleGetAccount.bind(this)
-    this.handleContractTable = this.handleContractTable.bind(this)
-    this.handleGetInfo = this.handleGetInfo.bind(this)
   }
 
   async componentWillMount() {
@@ -255,7 +252,6 @@ class App extends Component {
           {isLoggedIn && this.renderAppBalances(balances)}
 
           {isLoggedIn && this.renderSigningOptions()}
-          {isLoggedIn && this.renderAccountInfoButton()}
         </div>
         <h3 style={{ color: 'green', margin: '50px' }}>
           {isBusy && 'working...'}
@@ -271,6 +267,8 @@ class App extends Component {
           {signState && `Returned state param: ${signState}`}
         </div>
         {isLoggedIn && this.renderDiscoverOptions()}
+
+        {isLoggedIn && <JSONView userInfo={userInfo} />}
       </div>
     )
   }
@@ -364,43 +362,6 @@ class App extends Component {
         </div>
       )
     })
-
-  renderAccountInfoButton() {
-    return (
-      <div>
-        <Button
-          style={{ margin: '6px' }}
-          variant="contained"
-          color="primary"
-          onClick={this.handleGetInfo}
-        >
-          Get info
-        </Button>
-        <Button
-          style={{ margin: '6px' }}
-          variant="contained"
-          color="primary"
-          onClick={this.handleGetAccount}
-        >
-          Account Info
-        </Button>
-      </div>
-    )
-  }
-
-  handleGetAccount() {
-    const { accountName } = this.state.userInfo
-
-    this.stagingRpc.getAccount(accountName)
-  }
-
-  handleGetInfo() {
-    this.eosRpc.getInfo()
-  }
-
-  handleContractTable() {
-    this.eosRpc.getRows('createbridge', 'createbridge', 'balances')
-  }
 
   async fetchBalances() {
     try {
