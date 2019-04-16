@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import SignButton from './components/SignButton'
-import UserInfo from './components/UserInfo'
 import HeaderBar from './components/HeaderBar'
 import UserLoginView from './components/UserLoginView'
 import WalletButton from './components/WalletButton'
@@ -236,17 +235,15 @@ class App extends Component {
 
     return (
       <div>
-        <HeaderBar logout={this.handleLogout} isLoggedin={isLoggedIn} />
+        <HeaderBar
+          logout={this.handleLogout}
+          isLoggedin={isLoggedIn}
+          userInfo={userInfo}
+        />
         <div>
           <UserLoginView
             isLoggedin={isLoggedIn}
             clickedLogin={this.handleLogin}
-          />
-
-          <UserInfo
-            isLoggedin={isLoggedIn}
-            userInfo={userInfo}
-            clickedLogout={this.handleLogout}
           />
 
           {isLoggedIn && this.renderAppBalances(balances)}

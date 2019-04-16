@@ -14,19 +14,45 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
+    lineHeight: 1,
   },
   menuButton: {
     marginLeft: -12,
-    marginRight: 20,
+    marginRight: 10,
+  },
+  imageWrapper: {
+    margin: '2px 10px 2px 0',
+    borderRadius: '500px',
+    height: '30px',
+    width: '30px',
+    border: 'solid 1px rgba(0,0,0,.5)',
+    overflow: 'hidden',
   },
 }
 
-function ButtonAppBar(props) {
-  const { classes, logout, isLoggedin } = props
+function HeaderBar(props) {
+  const { classes, logout, isLoggedin, userInfo } = props
+  let image = null
+  let name = 'Dashboard'
+
+  if (userInfo) {
+    if (userInfo.picture) {
+      image = userInfo.picture
+    }
+    if (userInfo.name) {
+      name = userInfo.name
+    } else if (userInfo.username) {
+      name = userInfo.username
+    }
+    if (userInfo.accountName) {
+      name += ': ' + userInfo.accountName
+    }
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar variant="dense">
           <IconButton
             className={classes.menuButton}
             color="inherit"
@@ -34,8 +60,17 @@ function ButtonAppBar(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            ORE Dashboard
+
+          <div className={classes.imageWrapper}>
+            <img src={image} alt="" style={{ height: '100%' }} />
+          </div>
+
+          <Typography
+            variant="subtitle2"
+            color="inherit"
+            className={classes.grow}
+          >
+            {name}
           </Typography>
           {isLoggedin && (
             <Button color="inherit" onClick={logout}>
@@ -48,8 +83,8 @@ function ButtonAppBar(props) {
   )
 }
 
-ButtonAppBar.propTypes = {
+HeaderBar.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(ButtonAppBar)
+export default withStyles(styles)(HeaderBar)
