@@ -239,7 +239,7 @@ class App extends Component {
 
     return (
       <div>
-        <HeaderBar />
+        <HeaderBar logout={this.handleLogout} isLoggedin={isLoggedIn} />
         <div>
           <UserLoginView
             isLoggedin={isLoggedIn}
@@ -369,6 +369,7 @@ class App extends Component {
     return (
       <div>
         <Button
+          style={{ margin: '6px' }}
           variant="contained"
           color="primary"
           onClick={this.handleGetInfo}
@@ -376,18 +377,12 @@ class App extends Component {
           Get info
         </Button>
         <Button
+          style={{ margin: '6px' }}
           variant="contained"
           color="primary"
           onClick={this.handleGetAccount}
         >
           Account Info
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={this.handleContractTable}
-        >
-          Contract Table
         </Button>
       </div>
     )

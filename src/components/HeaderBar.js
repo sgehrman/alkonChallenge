@@ -22,7 +22,7 @@ const styles = {
 }
 
 function ButtonAppBar(props) {
-  const { classes } = props
+  const { classes, logout, isLoggedin } = props
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -37,7 +37,11 @@ function ButtonAppBar(props) {
           <Typography variant="h6" color="inherit" className={classes.grow}>
             ORE Dashboard
           </Typography>
-          <Button color="inherit">Login</Button>
+          {isLoggedin && (
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>

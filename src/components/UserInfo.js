@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Button from '@material-ui/core/Button'
 
 class UserInfo extends Component {
   render() {
@@ -27,14 +26,6 @@ class UserInfo extends Component {
         username: {username}
         <br />
         email: {email}
-        <br />
-        <Button
-          onClick={this.props.clickedLogout}
-          color="secondary"
-          variant="contained"
-        >
-          Logout
-        </Button>
       </div>
     )
   }
