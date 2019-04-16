@@ -9,6 +9,7 @@ import {
   bindTrigger,
   bindMenu,
 } from 'material-ui-popup-state/hooks'
+import ArrowDownward from '@material-ui/icons/ArrowDropDown'
 
 export default function JSONView(props) {
   const [json, setJSON] = useState(null)
@@ -32,7 +33,7 @@ export default function JSONView(props) {
       mode: 'account',
     },
     {
-      mode: 'table',
+      mode: 'contract',
     },
   ]
 
@@ -46,7 +47,7 @@ export default function JSONView(props) {
       case 'account':
         result = await stagingRpc.getAccount(props.userInfo.accountName)
         break
-      case 'table':
+      case 'contract':
         result = await eosRpc.getRows(
           'createbridge',
           'createbridge',
@@ -93,12 +94,24 @@ export default function JSONView(props) {
     )
   }
 
+  const mainStyle = {
+    marginTop: '16px',
+  }
+  const buttonStyle = {
+    margin: '6px 20px',
+  }
+
   return (
-    <div>
+    <div style={mainStyle}>
       {showButton && (
         <div>
-          <Button variant="contained" {...bindTrigger(popupState)}>
+          <Button
+            variant="outlined"
+            style={buttonStyle}
+            {...bindTrigger(popupState)}
+          >
             {mode}
+            <ArrowDownward />
           </Button>
           <Menu {...bindMenu(popupState)}>
             {menuItems.map((menu, index) => {

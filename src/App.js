@@ -26,6 +26,14 @@ class App extends Component {
     this.handleLogin = this.handleLogin.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
     this.handleSignButton = this.handleSignButton.bind(this)
+
+    this.walletButtons = [
+      { provider: 'scatter', chainNetworkForExample },
+      { provider: 'ledger', chainNetworkForExample },
+      { provider: 'lynx', chainNetworkForExample },
+      { provider: 'meetone', chainNetworkForExample },
+      { provider: 'tokenpocket', chainNetworkForExample },
+    ]
   }
 
   async componentWillMount() {
@@ -233,6 +241,20 @@ class App extends Component {
 
     const isBusy = this.ore.isBusy()
 
+    const contentBox = {
+      display: 'flex',
+      justifyContent: 'center',
+    }
+    const innerContentBox = {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }
+    const messageBox = {
+      width: '80vw',
+      wordWrap: 'break-word',
+    }
+
     return (
       <div>
         <HeaderBar
@@ -240,30 +262,31 @@ class App extends Component {
           isLoggedin={isLoggedIn}
           userInfo={userInfo}
         />
-        <div>
-          <UserLoginView
-            isLoggedin={isLoggedIn}
-            clickedLogin={this.handleLogin}
-          />
+        <div style={contentBox}>
+          <div style={innerContentBox}>
+            <UserLoginView
+              isLoggedin={isLoggedIn}
+              clickedLogin={this.handleLogin}
+            />
 
-          {isLoggedIn && this.renderAppBalances(balances)}
+            {isLoggedIn && this.renderAppBalances(balances)}
 
-          {isLoggedIn && this.renderSigningOptions()}
+            {isLoggedIn && this.renderSigningOptions()}
+            {isLoggedIn && this.renderDiscoverOptions()}
+
+            <div style={messageBox}>
+              <h3 style={{ color: 'green' }}>{isBusy && 'working...'}</h3>
+              <div style={{ color: 'red' }}>{errorMessage && errorMessage}</div>
+              <div style={{ color: 'blue' }}>
+                {signedTransaction &&
+                  `Returned signed transaction: ${signedTransaction}`}
+              </div>
+              <div style={{ color: 'blue' }}>
+                {signState && `Returned state param: ${signState}`}
+              </div>
+            </div>
+          </div>
         </div>
-        <h3 style={{ color: 'green', margin: '50px' }}>
-          {isBusy && 'working...'}
-        </h3>
-        <div style={{ color: 'red', margin: '50px' }}>
-          {errorMessage && errorMessage}
-        </div>
-        <div style={{ color: 'blue', marginLeft: '50px', marginTop: '50px' }}>
-          {signedTransaction &&
-            `Returned signed transaction: ${signedTransaction}`}
-        </div>
-        <div style={{ color: 'blue', marginLeft: '50px', marginTop: '10px' }}>
-          {signState && `Returned state param: ${signState}`}
-        </div>
-        {isLoggedIn && this.renderDiscoverOptions()}
 
         {isLoggedIn && <JSONView userInfo={userInfo} />}
       </div>
@@ -280,7 +303,7 @@ class App extends Component {
 
     return (
       <div>
-        <div style={{ marginTop: 50, marginLeft: 20 }}>
+        <div>
           <h3>Sign transaction with one of your keys</h3>
           <ul>{this.renderSignButtons(this.permissionsToRender)}</ul>
         </div>
@@ -289,15 +312,6 @@ class App extends Component {
   }
 
   renderDiscoverOptions() {
-    let chainNetwork = chainNetworkForExample
-    this.walletButtons = [
-      { provider: 'scatter', chainNetwork },
-      { provider: 'ledger', chainNetwork },
-      { provider: 'lynx', chainNetwork },
-      { provider: 'meetone', chainNetwork },
-      { provider: 'tokenpocket', chainNetwork },
-    ]
-
     const buttonGroupStyle = {
       display: 'flex',
       flexWrap: 'wrap',
@@ -305,10 +319,24 @@ class App extends Component {
 
     return (
       <div>
-        <div style={{ marginTop: 50, marginLeft: 20 }}>
-          <h3 style={{ marginTop: 50 }}>Or discover a key in your wallet</h3>
+        <div>
+          <h3>Or discover a key in your wallet</h3>
           <div style={buttonGroupStyle}>
-            {this.renderWalletDiscoverButtons(this.walletButtons)}
+            {this.walletButtons.map((wallet, index) => {
+              let provider = wallet.provider
+              return (
+                <div key={index}>
+                  <WalletButton
+                    provider={provider}
+                    data-tag={index}
+                    text={`${provider}`}
+                    onClick={() => {
+                      this.handleWalletDiscoverButton(index)
+                    }}
+                  >{`${provider}`}</WalletButton>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -338,24 +366,6 @@ class App extends Component {
           {`Chain:${permission.chainNetwork} ---- Account:${
             permission.chainAccount
           } ---- Permission:${permission.permission}`}
-        </div>
-      )
-    })
-
-  //render one sign transaction button for each chain
-  renderWalletDiscoverButtons = walletButtons =>
-    walletButtons.map((wallet, index) => {
-      let provider = wallet.provider
-      return (
-        <div key={index}>
-          <WalletButton
-            provider={provider}
-            data-tag={index}
-            text={`${provider}`}
-            onClick={() => {
-              this.handleWalletDiscoverButton(index)
-            }}
-          >{`${provider}`}</WalletButton>
         </div>
       )
     })
