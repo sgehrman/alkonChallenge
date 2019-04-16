@@ -1,33 +1,21 @@
-import React, { Component } from 'react'
+import React from 'react'
 import SocialLoginButton from './SocialLoginButton'
 
-class UserLoginView extends Component {
-  render() {
-    const { isLoggedin } = this.props
+function UserLoginView(props) {
+  const { isLoggedin } = props
 
-    const buttonBox = {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-    }
-    const innerButtonBox = {
-      display: 'flex',
-      flexDirection: 'column',
-    }
-
-    if (!isLoggedin) {
-      return (
-        <div style={buttonBox}>
-          <div style={innerButtonBox}>{this.renderLoginButtons()}</div>
-        </div>
-      )
-    }
-
-    return null
+  const buttonBox = {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  }
+  const innerButtonBox = {
+    display: 'flex',
+    flexDirection: 'column',
   }
 
-  renderLoginButtons() {
-    const { clickedLogin } = this.props
+  function renderLoginButtons() {
+    const { clickedLogin } = props
 
     return (
       <div>
@@ -79,6 +67,16 @@ class UserLoginView extends Component {
       </div>
     )
   }
+
+  if (!isLoggedin) {
+    return (
+      <div style={buttonBox}>
+        <div style={innerButtonBox}>{renderLoginButtons()}</div>
+      </div>
+    )
+  }
+
+  return null
 }
 
 export default UserLoginView

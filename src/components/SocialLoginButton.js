@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Button from '@material-ui/core/Button'
 
 let validProviders = [
@@ -32,25 +32,19 @@ const defaultLogoStyle = {
   verticalAlign: 'bottom',
 }
 
-class SocialLoginButton extends Component {
-  constructor(props) {
-    super(props)
-    this.checkValidProvider(this.props.provider)
-    let providerStyle =
-      require(`../assets/button-styles/${this.props.provider}-style.json`) || {} //get the style for this provider
-    this.state = {
-      provider: this.props.provider,
-      onClickCallback: this.props.onClick,
-      buttonStyle: {
-        ...defaultButtonStyle,
-        ...providerStyle.buttonStyle,
-      },
-      logoStyle: defaultLogoStyle,
-      text: this.props.text || providerStyle.text,
-    }
+function SocialLoginButton(props) {
+  checkValidProvider(props.provider)
+  const providerStyle =
+    require(`../assets/button-styles/${props.provider}-style.json`) || {}
+
+  const buttonStyle = {
+    ...defaultButtonStyle,
+    ...providerStyle.buttonStyle,
   }
 
-  checkValidProvider(provider) {
+  const text = props.text || providerStyle.text
+
+  function checkValidProvider(provider) {
     if (!validProviders.includes(provider)) {
       throw Error(
         `${provider} is not one of the supported providers. Use one of the following: ${validProviders.join(
@@ -60,27 +54,24 @@ class SocialLoginButton extends Component {
     }
   }
 
-  render() {
-    let { provider, onClickCallback, buttonStyle, logoStyle, text } = this.state
-    return (
-      <div>
-        <Button
-          variant="contained"
-          style={buttonStyle}
-          onClick={() => {
-            onClickCallback(provider)
-          }}
-        >
-          <img
-            style={logoStyle}
-            src={require(`../assets/button-styles/${provider}-logo.png`)}
-            alt={text}
-          />
-          {text}
-        </Button>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <Button
+        variant="contained"
+        style={buttonStyle}
+        onClick={() => {
+          props.onClick(props.provider)
+        }}
+      >
+        <img
+          style={defaultLogoStyle}
+          src={require(`../assets/button-styles/${props.provider}-logo.png`)}
+          alt={text}
+        />
+        {text}
+      </Button>
+    </div>
+  )
 }
 
 export default SocialLoginButton

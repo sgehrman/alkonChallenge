@@ -61,9 +61,11 @@ function HeaderBar(props) {
             <MenuIcon />
           </IconButton>
 
-          <div className={classes.imageWrapper}>
-            <img src={image} alt="" style={{ height: '100%' }} />
-          </div>
+          {image && (
+            <div className={classes.imageWrapper}>
+              <img src={image} alt="" style={{ height: '100%' }} />
+            </div>
+          )}
 
           <Typography
             variant="subtitle2"
