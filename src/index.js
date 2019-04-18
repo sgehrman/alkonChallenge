@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import App from './App'
 import * as serviceWorker from './js/serviceWorker'
+import Model from './js/model'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 import './assets/app.scss'
@@ -15,10 +16,12 @@ const theme = createMuiTheme({
   },
 })
 
+const model = new Model()
+
 function Root() {
   return (
     <MuiThemeProvider theme={theme}>
-      <App />
+      <App model={model} />
     </MuiThemeProvider>
   )
 }
