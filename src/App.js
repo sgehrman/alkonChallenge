@@ -3,6 +3,7 @@ import SignButton from './components/SignButton'
 import HeaderBar from './components/HeaderBar'
 import UserLoginView from './components/UserLoginView'
 import WalletButton from './components/WalletButton'
+import PasswordlessLogin from './components/PasswordlessLogin'
 import JSONView from './components/JSONView'
 import ORE from './js/ore'
 import EOSRpc from './js/eosRpc'
@@ -197,9 +198,8 @@ const App = observer(
     async handleAuthCallback() {
       const url = window.location.href
       if (/authcallback/i.test(url)) {
-        const { account, errors, state } = await this.ore.id.handleAuthResponse(
-          url
-        )
+        // state is also available from handleAuthResponse, removed since not used.
+        const { account, errors } = await this.ore.id.handleAuthResponse(url)
         if (!errors) {
           this.loadUserFromApi(account)
         }
@@ -261,6 +261,8 @@ const App = observer(
           />
           <div style={contentBox}>
             <div style={innerContentBox}>
+              <PasswordlessLogin ore={this.ore} />
+
               <UserLoginView
                 isLoggedin={isLoggedIn}
                 clickedLogin={this.handleLogin}
