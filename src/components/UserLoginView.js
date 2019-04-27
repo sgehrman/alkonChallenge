@@ -1,21 +1,21 @@
-import React from 'react'
-import SocialLoginButton from './SocialLoginButton'
+import React from 'react';
+import SocialLoginButton from './SocialLoginButton';
 
 function UserLoginView(props) {
-  const { isLoggedin } = props
+  const { isLoggedin } = props;
 
   const buttonBox = {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-  }
+  };
   const innerButtonBox = {
     display: 'flex',
     flexDirection: 'column',
-  }
+  };
 
   function renderLoginButtons() {
-    const { clickedLogin } = props
+    const { clickedLogin } = props;
 
     return (
       <div>
@@ -64,8 +64,18 @@ function UserLoginView(props) {
           onClick={() => clickedLogin('scatter')}
           //  text='Log in with Scatter'
         />
+        <SocialLoginButton
+          provider="email"
+          onClick={() => clickedLogin('email')}
+          //  text='Log in with Scatter'
+        />
+        <SocialLoginButton
+          provider="phone"
+          onClick={() => clickedLogin('phone')}
+          //  text='Log in with Scatter'
+        />
       </div>
-    )
+    );
   }
 
   if (!isLoggedin) {
@@ -73,10 +83,10 @@ function UserLoginView(props) {
       <div style={buttonBox}>
         <div style={innerButtonBox}>{renderLoginButtons()}</div>
       </div>
-    )
+    );
   }
 
-  return null
+  return null;
 }
 
-export default UserLoginView
+export default UserLoginView;

@@ -1,34 +1,34 @@
-const { JsonRpc } = require('eosjs')
+const { JsonRpc } = require('eosjs');
 
 export default class EOSRpc {
   constructor(server) {
-    this.rpc = new JsonRpc(server)
+    this.rpc = new JsonRpc(server);
   }
 
   async getRows(contract, scope, table) {
     const resp = await this.rpc.get_table_rows({
       json: true,
       code: contract,
-      scope: scope,
-      table: table,
-    })
+      scope,
+      table,
+    });
 
-    return resp
+    return resp;
   }
 
   async getInfo() {
-    const resp = await this.rpc.get_info()
+    const resp = await this.rpc.get_info();
 
-    return resp
+    return resp;
   }
 
   async getAccount(accountName) {
-    let resp = {}
+    let resp = {};
 
     if (accountName && accountName.length > 0) {
-      resp = await this.rpc.get_account(accountName)
+      resp = await this.rpc.get_account(accountName);
     }
 
-    return resp
+    return resp;
   }
 }

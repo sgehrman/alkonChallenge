@@ -1,13 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import { UserInfoDialog, showDialog } from './UserInfoDialog'
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import { UserInfoDialog, showDialog } from './UserInfoDialog';
 
 const styles = {
   root: {
@@ -29,24 +28,24 @@ const styles = {
     border: 'solid 1px rgba(0,0,0,.5)',
     overflow: 'hidden',
   },
-}
+};
 
 function HeaderBar(props) {
-  const { classes, logout, isLoggedin, userInfo } = props
-  let image = null
-  let name = 'Dashboard'
+  const { classes, logout, isLoggedin, userInfo } = props;
+  let image = null;
+  let name = 'Dashboard';
 
   if (userInfo) {
     if (userInfo.picture) {
-      image = userInfo.picture
+      image = userInfo.picture;
     }
     if (userInfo.name) {
-      name = userInfo.name
+      name = userInfo.name;
     } else if (userInfo.username) {
-      name = userInfo.username
+      name = userInfo.username;
     }
     if (userInfo.accountName) {
-      name += ': ' + userInfo.accountName
+      name += `: ${userInfo.accountName}`;
     }
   }
 
@@ -60,7 +59,7 @@ function HeaderBar(props) {
             aria-label="Menu"
             onClick={() => {
               if (isLoggedin) {
-                showDialog()
+                showDialog();
               }
             }}
           >
@@ -73,11 +72,7 @@ function HeaderBar(props) {
             </div>
           )}
 
-          <Typography
-            variant="subtitle2"
-            color="inherit"
-            className={classes.grow}
-          >
+          <Typography variant="subtitle2" color="inherit" className={classes.grow}>
             {name}
           </Typography>
           {isLoggedin && (
@@ -90,11 +85,7 @@ function HeaderBar(props) {
 
       <UserInfoDialog userInfo={userInfo} />
     </div>
-  )
+  );
 }
 
-HeaderBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-}
-
-export default withStyles(styles)(HeaderBar)
+export default withStyles(styles)(HeaderBar);
